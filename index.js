@@ -22,6 +22,7 @@ sequelize.authenticate()
 
 const articleRoutes = require('./routes/article');
 app.use('/', articleRoutes);
+app.use('/article', articleRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
