@@ -3,12 +3,15 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize('mysql://root:qwerty@localhost:3306/joga_sequelize');
 
 // require Article model
-const Article = require('../models/article')(sequelize, Sequelize.DataTypes);
+//const Article = require('../models/article')(sequelize, Sequelize.DataTypes);
+
+// Import models
+const models = require('../models');
 
 // Controller function to get all articles
 const getAllArticles = async (req, res) => {
     try {
-        const articles = await Article.findAll()
+        const articles = await models.Article.findAll({ include: models.Author });
         res.status(200).json(articles);
     } catch (error) {
         console.error('Error fetching articles:', error);
@@ -20,7 +23,7 @@ const getAllArticles = async (req, res) => {
 const getArticleBySlug = async (req, res) => {
     const { slug } = req.params;
     try {
-        const article = await Article.findOne({ where: { slug } });
+        const article = await models.Article.findOne({ where: { slug }, include: models.Author });
         if (article) {
             res.status(200).json(article);
         } else {
