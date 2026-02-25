@@ -1,7 +1,3 @@
-// Connect to database
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize('mysql://root:qwerty@localhost:3306/joga_sequelize');
-
 // require Article model
 //const Article = require('../models/article')(sequelize, Sequelize.DataTypes);
 

@@ -25,6 +25,7 @@ const authorRoutes = require('./routes/author');
 app.use('/', articleRoutes);
 app.use('/article', articleRoutes);
 app.use('/author', authorRoutes);
+app.use('/admin/create', articleRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
