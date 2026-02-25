@@ -21,9 +21,22 @@ const getAllArticles = async (req, res) => {
 
 // Controller function to get an article by slug
 const getArticleBySlug = async (req, res) => {
-    const { slug } = req.params;
+
     try {
-        const article = await models.Article.findOne({ where: { slug }, include: models.Author });
+        const article = await models.Article.findOne({
+            where: { slug: req.params.slug },
+            include: [
+                {
+                    model: models.Author
+                },
+                {
+                    model: models.Tags,
+                    through: {
+                        model: models.ArticleTags
+                    }
+                }
+            ]
+        });
         if (article) {
             res.status(200).json(article);
         } else {
@@ -34,6 +47,7 @@ const getArticleBySlug = async (req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching the article' });
     }
 };
+
 
 module.exports = {
     getAllArticles,
