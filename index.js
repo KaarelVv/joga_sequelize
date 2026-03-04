@@ -26,6 +26,7 @@ app.use('/', articleRoutes);
 app.use('/article', articleRoutes);
 app.use('/author', authorRoutes);
 app.use('/admin/create', articleRoutes);
+app.use('/admin/edit', articleRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
