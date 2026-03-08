@@ -17,7 +17,6 @@ const getAllArticles = async (req, res) => {
 
 // Controller function to get an article by slug
 const getArticleBySlug = async (req, res) => {
-
     try {
         const article = await models.Article.findOne({
             where: { slug: req.params.slug },
@@ -27,7 +26,8 @@ const getArticleBySlug = async (req, res) => {
                 },
                 {
                     model: models.Tags,
-                    through: {
+                    through:
+                    {
                         model: models.ArticleTags
                     }
                 }

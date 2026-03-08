@@ -1,7 +1,7 @@
 
 // Import models
 const models = require('../../models');
-const { renderEditArticleView } = require('../../views/admin/article/edit');
+const renderEditArticleView = require('../../views/admin/article/edit.hbs');
 
 // Controller function to create a new article
 const createArticle = async (req, res) => {
@@ -31,53 +31,77 @@ const renderEditArticleForm = async (req, res) => {
         const article = await models.Article.findByPk(req.params.id);
 
         if (!article) {
-            return res.status(404).send('<h1>Article not found</h1>');
+            return res.status(404).send('Article not found');
+        }
+        const recivedArticle = {
+            id: article.id,
+            name: article.name,
+            slug: article.slug,
+            image: article.image,
+            body: article.body,
         }
 
         return res.status(200).send(renderEditArticleView({
-            article,
+            recivedArticle,
             isUpdated: req.query.updated === '1'
         }));
     } catch (error) {
         console.error('Error rendering article edit form:', error);
-        return res.status(500).send('<h1>Failed to load article edit form</h1>');
+        return res.status(500).send('Failed to load article edit form');
     }
 };
 
 // Controller function to edit article
 const editArticle = async (req, res) => {
     try {
-        let id = req.params.id;
-        let name = req.body.name;
-        let slug = req.body.slug;
-        let image = req.body.image;
-        let body = req.body.body;
-
+        const article = await models.Article.findByPk(req.params.id);
+        if (!article) {
+            return res.status(404).send({ message: 'Article not found' });
+        }
+        const recivedArticle = {
+            name: article.name,
+            slug: article.slug,
+            image: article.image,
+            body: article.body,
+        }
         await models.Article.update({
-            name: name,
-            slug: slug,
-            image: image,
-            body: body,
+            recivedArticle
         }, {
             where: {
                 id: id
             }
         });
 
-        if ((req.headers.accept || '').includes('text/html')) {
-            return res.redirect(`/admin/article/edit/${id}?updated=1`);
-        }
-
-        res.status(200).json({ message: 'Article updated successfully' });
+        return res.status(200).json({ message: 'Article updated successfully' });
     } catch (error) {
         console.error('Error updating article ', error);
         res.status(500).json({ error: 'An error occurred while updating the article' });
     }
 };
-   
+const deleteArticle = async (req, res) => {
+    try {
+        const articleId = req.params.id;
+        const deleteRowCount = await models.Article.destroy({
+            where: { id: articleId }
+        })
+
+        if (deleteRowCount === 0) {
+            return res.status(404).json({ message: "Article not found" });
+        }
+
+        return res.status(200).json({ message: "Article deleted successfully" })
+    }
+    catch (error) {
+        console.error('Error deleting article ', error);
+        res.status(500).json({ error: 'An error occurred while deleting the article' });
+    }
+}
+
 
 module.exports = {
     createArticle,
     editArticle,
-    renderEditArticleForm
+    renderEditArticleForm,
+    deleteArticle
+
 };

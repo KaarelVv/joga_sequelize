@@ -1,0 +1,19 @@
+<h1>Edit Article</h1>
+
+<form method="post" action="/admin/article/edit/{{recivedArticle.id}}">
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" value="{{recivedArticle.name}}" required />
+
+      <label for="slug">Slug</label>
+      <input id="slug" name="slug" type="text" value="{{recivedArticle.slug}}" required />
+
+      <label for="image">Image URL</label>
+      <input id="image" name="image" type="text" value="{{recivedArticle.image}}" />
+
+      <label for="body">Body</label>
+      <textarea id="body" name="body" required>{{recivedArticle.body}}</textarea>
+
+      <button type="submit">Update Article</button>
+      <button type="submit" formaction="/admin/article/delete/{{recivedArticle.id}}" formmethod="post">Delete
+            Article</button>
+</form>
